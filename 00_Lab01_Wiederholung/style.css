@@ -1,0 +1,84 @@
+/* ===== Basis ===== */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  line-height: 1.5;
+  color: #111;
+  background: #f5f6f8;
+}
+
+/* ===== Layout ===== */
+header {
+  padding: 24px 16px 8px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 700;
+}
+
+main {
+  width: min(800px, 92vw);
+  margin: 0 auto 40px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: clamp(16px, 3vw, 24px);
+}
+
+/* ===== Überschriften ===== */
+main h2 {
+  margin: 12px 0 8px;
+  font-size: 1.1rem;
+  color: #374151;
+}
+
+/* ===== Frage ===== */
+#Frage {
+  margin: 6px 0 16px;
+  padding: 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1.05rem;
+}
+
+/* ===== Buttons ===== */
+button {
+  cursor: pointer;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color .12s ease, border-color .12s ease;
+}
+
+button:hover { background: #f3f4f6; }
+button:focus-visible {
+  outline: 3px solid #93c5fd; /* gut sichtbar */
+  outline-offset: 2px;
+}
+
+#fetch-question { margin: 4px 0 14px; }
+
+/* ===== Antworten – Grid ===== */
+#answers {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+#answers button {
+  width: 100%;
+  text-align: left;
+  white-space: normal;
+  line-height: 1.35;
+}
+
