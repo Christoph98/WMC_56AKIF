@@ -1,4 +1,10 @@
 const url = "https://opentdb.com/api.php?amount=1&category=18&difficulty=easy";
+let score = parseInt(localStorage.getItem("score")) || 0;
+
+function renderScore() {
+    document.getElementById("score").textContent = score;
+}
+
 
 document.getElementById('fetch-question').addEventListener('click', function () {
         const output = document.getElementById('Frage');
@@ -18,6 +24,9 @@ document.getElementById('fetch-question').addEventListener('click', function () 
             document.getElementById('answers').addEventListener('click',function (){
             if (element === correct) {
                 button.style.backgroundColor = 'green';
+                score ++;
+                localStorage.setItem("score", score);
+                renderScore();
             } else {
                 button.style.backgroundColor = 'red';
             }
@@ -25,3 +34,5 @@ document.getElementById('fetch-question').addEventListener('click', function () 
         });
     });
 });
+
+renderScore();
