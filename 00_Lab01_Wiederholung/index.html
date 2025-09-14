@@ -13,10 +13,13 @@
 
 <main>
 
+  <label for="playerName">Dein Name:</label>
+    <input type="text" id="playerName" maxlength="30" />
+    <button id="saveName">Speichern</button>
+
   <h2>Kategorie:</h2>
     <div>
-      <select id="category">
-      </select>
+      <select id="category"></select>
     </div>
       <h2>Frage:</h2>
       <button id="fetch-question">Frage holen</button>
@@ -27,6 +30,10 @@
     <h2>Score</h2>
     <p id="score">0</p>
 
+    <h3>Highscores</h3>
+    <ul id="highscore-list"></ul>
+    
+  <button id="clear-cache">Cache leeren</button>
 </main>
 
 </body>
