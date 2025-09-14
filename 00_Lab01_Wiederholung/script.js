@@ -20,8 +20,18 @@ if (nameInput) {
 
 // Name speichern
 document.getElementById("saveName").addEventListener("click", function() {
-    const name = nameInput.value.trim().slice(0, 30);
-    localStorage.setItem("playerName", name);
+    const name = nameInput.value.trim();
+    if (!name) {
+        alert('Bitte gib einen Namen ein!');
+        nameInput.focus();
+        return;
+    }
+    
+    // Neuer Name = Neuer Score (0)
+    localStorage.setItem("playerName", name.slice(0, 30));
+    score = 0; // Score zurücksetzen
+    setScoreForPlayer(name, score); // Score für neuen Spieler speichern
+    renderScore(); // Anzeige aktualisieren
     alert("Name gespeichert: " + name);
 });
 
@@ -35,18 +45,22 @@ function getScoreForPlayer(name) {
 // Score für aktuellen Spieler setzen
 function setScoreForPlayer(name, score) {
     let highscores = getHighscores();
-    const entry = highscores.find(e => e.name === name);
-    if (entry) {
-        entry.score = score;
-    } else {
-        highscores.push({ name, score });
-    }
+    
+    // Alten Eintrag komplett entfernen
+    highscores = highscores.filter(e => e.name !== name);
+    
+    // Neuen Eintrag mit aktuellem Score hinzufügen
+    highscores.push({ name, score });
+    
     saveHighscores(highscores);
 }
 
 // Aktuellen Namen holen
-const playerName = localStorage.getItem('playerName') || 'Gast';
-let score = getScoreForPlayer(playerName);
+function getCurrentPlayer() {
+    return localStorage.getItem('playerName') || '';
+}
+
+let score = getScoreForPlayer(getCurrentPlayer());
 
 function renderScore() {
     document.getElementById("score").textContent = score;
@@ -119,7 +133,8 @@ document.getElementById('fetch-question').addEventListener('click', function () 
                 answered = true;           
                 if (element === correct) {
                     score++;
-                    setScoreForPlayer(playerName, score);
+                    const currentPlayer = getCurrentPlayer(); // aktuellen Spieler holen
+                    setScoreForPlayer(currentPlayer, score);
                     renderScore();
                 } 
         });
