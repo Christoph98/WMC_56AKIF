@@ -1,4 +1,4 @@
-const baseurl = "https://opentdb.com/api.php?amount=1&category=18&difficulty=easy";
+const baseurl = "https://opentdb.com/api.php?amount=1&encode=url3986";
 const categoryUrl = "https://opentdb.com/api_category.php";
 let score = parseInt(localStorage.getItem("score")) || 0;
 
@@ -38,28 +38,31 @@ document.getElementById('fetch-question').addEventListener('click', function () 
         .then(response => response.json())
         .then(data => {
         const question = data.results[0].question;
-        output.textContent = question;
+        output.textContent = decodeURIComponent(question);
         const incorrect_answers = data.results[0].incorrect_answers, correct = data.results[0].correct_answer;
         const combined = [...incorrect_answers, correct].sort(()=>Math.random()-0.5);
         let answered = false;
         combined.forEach(element => {
         const button = document.createElement('button');
-        button.textContent = element; 
+        button.textContent = decodeURIComponent(element); 
         output2.appendChild(button);
            button.addEventListener('click', function () {
                     if (answered) return;      
                     answered = true;           
                     if (element === correct) {
-                        button.style.backgroundColor = 'green';
                         score++;
                         localStorage.setItem("score", score);
                         renderScore();
-                    } else {
-                        button.style.backgroundColor = 'red';
-                    }
+                    } 
         });
+        document.getElementById('answers').addEventListener('click', function () {
+            if (element === correct) {
+                button.style.backgroundColor = 'green';
+            } else {   
+                button.style.backgroundColor = 'red';
+            }
         });
     });
 });
-
+});
 renderScore();
