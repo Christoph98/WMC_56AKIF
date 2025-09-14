@@ -17,19 +17,22 @@ document.getElementById('fetch-question').addEventListener('click', function () 
         output.textContent = question;
         const incorrect_answers = data.results[0].incorrect_answers, correct = data.results[0].correct_answer;
         const combined = [...incorrect_answers, correct].sort(()=>Math.random()-0.5);
+        let answered = false;
         combined.forEach(element => {
             const button = document.createElement('button');
             button.textContent = element; 
             output2.appendChild(button);
-            document.getElementById('answers').addEventListener('click',function (){
-            if (element === correct) {
-                button.style.backgroundColor = 'green';
-                score ++;
-                localStorage.setItem("score", score);
-                renderScore();
-            } else {
-                button.style.backgroundColor = 'red';
-            }
+           button.addEventListener('click', function () {
+                    if (answered) return;      
+                    answered = true;           
+                    if (element === correct) {
+                        button.style.backgroundColor = 'green';
+                        score++;
+                        localStorage.setItem("score", score);
+                        renderScore();
+                    } else {
+                        button.style.backgroundColor = 'red';
+                    }
         });
         });
     });
