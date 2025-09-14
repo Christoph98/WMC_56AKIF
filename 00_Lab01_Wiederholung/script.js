@@ -1,4 +1,3 @@
-// URLs für die API anfragen
 const baseurl = "https://opentdb.com/api.php?amount=1&encode=url3986";
 const categoryUrl = "https://opentdb.com/api_category.php";
 
@@ -19,12 +18,17 @@ if (nameInput) {
     nameInput.value = savedName;
 }
 
-// Wenn Spieler auf Speichern klickt passirt das hier
+// Hier wird geprüft ob der Name eingegeben wurde und Name gespeichert undes werden leerzeichen entfernt
 document.getElementById("saveName").addEventListener("click", function() {
     const name = nameInput.value.trim();
     if (!name) {
-        alert('Bitte gib einen Namen ein!');
-        nameInput.focus();
+        alert('Bitte gib einen Namen ein!');        document.getElementById('fetch-question').addEventListener('click', function () {
+            const currentName = localStorage.getItem('playerName');
+            if (!currentName) {
+                alert('Bitte gib zuerst deinen Namen ein!');
+                return;
+            }
+        });
         return;
     }
     
@@ -108,7 +112,6 @@ document.getElementById('fetch-question').addEventListener('click', function () 
     const currentName = localStorage.getItem('playerName');
     if (!currentName) {
         alert('Bitte gib zuerst deinen Namen ein!');
-        nameInput.focus();
         return;
     }
     
@@ -162,9 +165,9 @@ renderScore();
 
 // Cache leeren button löscht alles ausm local storage
 document.getElementById('clear-cache').addEventListener('click', function() {
-    localStorage.removeItem('playerName');    // Name löschen
-    localStorage.removeItem('highscores');    // Highscores (Scores) löschen
-    score = 0;                               // Score-Variable zurücksetzen
+    localStorage.removeItem('playerName');    
+    localStorage.removeItem('highscores');    
+    score = 0;                               
     if (nameInput) nameInput.value = "";     // Eingabefeld leeren
     renderScore();
     renderHighscoreList();
