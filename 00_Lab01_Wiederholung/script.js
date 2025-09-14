@@ -1,24 +1,25 @@
+// URLs für die API anfragen
 const baseurl = "https://opentdb.com/api.php?amount=1&encode=url3986";
 const categoryUrl = "https://opentdb.com/api_category.php";
 
-// Hilfsfunktion: Highscores aus Local Storage holen
+// Funktionen für die Highscores speicherung im Local Storage
 function getHighscores() {
     return JSON.parse(localStorage.getItem('highscores') || '[]');
 }
 
-// Hilfsfunktion: Highscores speichern
+// Highscores werden gespeichert als JSON String
 function saveHighscores(highscores) {
     localStorage.setItem('highscores', JSON.stringify(highscores));
 }
 
-// Name aus Input holen
+// Spieler name wird aus dem Input geholt und gespeichert
 const nameInput = document.getElementById("playerName");
 const savedName = localStorage.getItem("playerName") || "";
 if (nameInput) {    
     nameInput.value = savedName;
 }
 
-// Name speichern
+// Wenn Spieler auf Speichern klickt passirt das hier
 document.getElementById("saveName").addEventListener("click", function() {
     const name = nameInput.value.trim();
     if (!name) {
@@ -35,14 +36,14 @@ document.getElementById("saveName").addEventListener("click", function() {
     alert("Name gespeichert: " + name);
 });
 
-// Score für aktuellen Spieler holen
+// Score von spieler wird hier rausgeholt ausm local storage
 function getScoreForPlayer(name) {
     const highscores = getHighscores();
     const entry = highscores.find(e => e.name === name);
     return entry ? entry.score : 0;
 }
 
-// Score für aktuellen Spieler setzen
+// Score wird hier gespeichert für den aktuelen spieler
 function setScoreForPlayer(name, score) {
     let highscores = getHighscores();
     
@@ -55,18 +56,20 @@ function setScoreForPlayer(name, score) {
     saveHighscores(highscores);
 }
 
-// Aktuellen Namen holen
+// Aktueler spieler name wird hier geholt
 function getCurrentPlayer() {
     return localStorage.getItem('playerName') || '';
 }
 
 let score = getScoreForPlayer(getCurrentPlayer());
 
+// Score wird hier angezeigt aufm bildschirm
 function renderScore() {
     document.getElementById("score").textContent = score;
     renderHighscoreList();
 }
 
+// Highscore liste wird hier erstelt und sortirt
 function renderHighscoreList() {
     const highscores = getHighscores();
     const list = document.getElementById('highscore-list');
@@ -80,6 +83,7 @@ function renderHighscoreList() {
     });
 }
 
+// Kategorien werden hier von der API geholt und in select eingefügt
 fetch(categoryUrl)
 .then(response => response.json())
 .then(data => {
@@ -116,42 +120,49 @@ document.getElementById('fetch-question').addEventListener('click', function () 
     if (selectedCat) {
     url += `&category=${selectedCat}`;
     }
+    // Neue frage von API holen mit category
     fetch(url)
     .then(response => response.json())
     .then(data => {
-    const question = data.results[0].question;
-    output.textContent = decodeURIComponent(question);
-    const incorrect_answers = data.results[0].incorrect_answers, correct = data.results[0].correct_answer;
-    const combined = [...incorrect_answers, correct].sort(()=>Math.random()-0.5);
-    let answered = false;
-    combined.forEach(element => {
-    const button = document.createElement('button');
-    button.textContent = decodeURIComponent(element); 
-    output2.appendChild(button);
-       button.addEventListener('click', function () {
-                if (answered) return;      
-                answered = true;           
-                if (element === correct) {
-                    score++;
-                    const currentPlayer = getCurrentPlayer(); // aktuellen Spieler holen
-                    setScoreForPlayer(currentPlayer, score);
-                    renderScore();
-                } 
-        });
-        document.getElementById('answers').addEventListener('click', function () {
-            if (element === correct) {
-                button.style.backgroundColor = 'green';
-            } else {   
-                button.style.backgroundColor = 'red';
-            }
+        // Frage wird decodirt und angezeigt
+        const question = data.results[0].question;
+        output.textContent = decodeURIComponent(question);
+        
+        // Antworten werden gemischt und buttons erstelt
+        const incorrect_answers = data.results[0].incorrect_answers, 
+              correct = data.results[0].correct_answer;
+        const combined = [...incorrect_answers, correct].sort(()=>Math.random()-0.5);
+        
+        // Für jede antwort wird ein button erstelt
+        combined.forEach(element => {
+            const button = document.createElement('button');
+            button.textContent = decodeURIComponent(element); 
+            output2.appendChild(button);
+               button.addEventListener('click', function () {
+                        if (answered) return;      
+                        answered = true;           
+                        if (element === correct) {
+                            score++;
+                            const currentPlayer = getCurrentPlayer(); // aktuellen Spieler holen
+                            setScoreForPlayer(currentPlayer, score);
+                            renderScore();
+                        } 
+                });
+                document.getElementById('answers').addEventListener('click', function () {
+                    if (element === correct) {
+                        button.style.backgroundColor = 'green';
+                    } else {   
+                        button.style.backgroundColor = 'red';
+                    }
+                });
         });
     });
 });
-});
 renderScore();
 
+// Cache leeren button löscht alles ausm local storage
 document.getElementById('clear-cache').addEventListener('click', function() {
- localStorage.removeItem('playerName');    // Name löschen
+    localStorage.removeItem('playerName');    // Name löschen
     localStorage.removeItem('highscores');    // Highscores (Scores) löschen
     score = 0;                               // Score-Variable zurücksetzen
     if (nameInput) nameInput.value = "";     // Eingabefeld leeren
