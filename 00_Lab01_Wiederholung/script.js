@@ -1,5 +1,6 @@
 const baseurl = "https://opentdb.com/api.php?amount=1&encode=url3986";
 const categoryUrl = "https://opentdb.com/api_category.php";
+let answered = false; // Variable für Antwort-Status hinzufügen
 
 // Funktionen für die Highscores speicherung im Local Storage
 function getHighscores() {
@@ -118,6 +119,7 @@ document.getElementById('fetch-question').addEventListener('click', function () 
     const output = document.getElementById('Frage');
     const output2 = document.getElementById('answers');
     output2.innerHTML = '';
+    answered = false; // Reset answered status
     let selectedCat = document.getElementById("category").value;
     let url = baseurl;
     if (selectedCat) {
@@ -142,20 +144,23 @@ document.getElementById('fetch-question').addEventListener('click', function () 
             button.textContent = decodeURIComponent(element); 
             output2.appendChild(button);
                button.addEventListener('click', function () {
-                        if (answered) return;      
-                        answered = true;           
-                        if (element === correct) {
-                            score++;
-                            const currentPlayer = getCurrentPlayer(); // aktuellen Spieler holen
-                            setScoreForPlayer(currentPlayer, score);
-                            renderScore();
-                        } 
-                });
-                document.getElementById('answers').addEventListener('click', function () {
+                    if (answered) return;      
+                    answered = true;           
                     if (element === correct) {
+                        score++;
+                        const currentPlayer = getCurrentPlayer();
+                        setScoreForPlayer(currentPlayer, score);
+                        renderScore();
                         button.style.backgroundColor = 'green';
-                    } else {   
+                    } else {
                         button.style.backgroundColor = 'red';
+                        // Zeige richtige Antwort
+                        const buttons = output2.getElementsByTagName('button');
+                        for(let btn of buttons) {
+                            if(decodeURIComponent(correct) === btn.textContent) {
+                                btn.style.backgroundColor = 'green';
+                            }
+                        }
                     }
                 });
         });
