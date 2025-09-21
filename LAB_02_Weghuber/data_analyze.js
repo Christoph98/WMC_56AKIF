@@ -36,7 +36,7 @@ const data = JSON.parse(rawdata);
 // (1) Welche Stores sind in 1050 oder 1110 Wien? Filtere nach der Postleitzahl.
 {
     const result = data.stores
-        .filter(store => store.zip == 1050 || store.zip == 1110);
+         .filter(store => store.zip == 1050 || store.zip == 1110);
     console.log("(1)Stores in 1050 oder 1110 Wien.");
     console.group();
     console.table(result);
@@ -108,7 +108,7 @@ const data = JSON.parse(rawdata);
     const result = data.products.filter(p => p.productCategory.name == 'Handmade')
                               .map(p =>{
                                     const preise = data.offers
-                                    .filter(angebot => angebot.product.name == p.name)
+                                    .filter(angebot => angebot.product.ean == p.ean)
                                     .map(angebot => angebot.price)
                                     return{
                                         Name: p.name,
