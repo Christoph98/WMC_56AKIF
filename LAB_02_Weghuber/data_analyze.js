@@ -46,7 +46,7 @@ const data = JSON.parse(rawdata);
 // (2) In welchen Postleitzahlen existieren Stores? Verwende ein Set zur Entfernung der doppelten
 // Werte.
 {
-    const result = [];
+    const result = new Set(data.stores.map(store => store.zip));
     console.log("(2) PLZ mit Stores.");
     console.group();
     console.log(result);
@@ -56,7 +56,8 @@ const data = JSON.parse(rawdata);
 // (3) Erstelle ein Array mit EAN, Name und Kategorie der Produkte, die vor dem 15. Februar 2021
 // hinzugefügt wurden. Hinweis: Du kannst < auch bei Datestrings verwenden.
 {
-    const result = [];
+    const result = data.products.filter(products => products.added < '2021-02-15')
+                                .map(products => ({ean: products.ean, name: products.name,pC: products.productCategory}));
     console.log("(3) Produkte, die vor dem 15. Februar 2021 hinzugefügt wurden.");
     console.group();
     console.table(result);
@@ -68,7 +69,13 @@ const data = JSON.parse(rawdata);
 // Verwende reduce, um den kleineren Wert beim Vergleich zwischen prev und current
 // zurückzugeben. Initialisiere mit Number.MAX_VALUE.
 {
-    const result = [];
+    const result = data.offers.filter(offers => offers.product.ean == '246122')
+                              .reduce((previous,current) => {
+                                if(current.price < previous)
+                                    return current.price 
+                                else
+                                    return previous
+                              }, Number.MAX_VALUE);
     console.log("(4) Preis des billigsten Angebotes des Produktes 246122 mit reduce");
     console.group();
     console.log(result);
@@ -81,7 +88,8 @@ const data = JSON.parse(rawdata);
 // Beispiel: Math.min(...[1,2,3])  --> 1
 // Beachte, dass Math.min nur ein Array mit Zahlen verarbeiten kann.
 {
-    const result = [];
+    const result =  Math.min(... data.offers.filter(offers => offers.product.ean == '246122')
+                                            .map(offers => offers.price));
     console.log("(5) Preis des billigsten Angebotes des Produktes 246122 mit Math.min()");
     console.group();
     console.log(result);
@@ -96,7 +104,18 @@ const data = JSON.parse(rawdata);
 //   Math.max bzw. Math.min. Als Argument gehe das Array data.offers mit entsprechender
 //   Filterung durch, um nur das aktuelle Produkt zu berücksichtigen.
 {
-    const result = [];
+    
+    const result = data.products.filter(p => p.productCategory.name == 'Handmade')
+                              .map(p =>{
+                                    const preise = data.offers
+                                    .filter(angebot => angebot.product.name == p.name)
+                                    .map(angebot => angebot.price)
+                                    return{
+                                        Name: p.name,
+                                        Guenstigtes: Math.min(...preise),
+                                        Teurestes: Math.max(...preise)
+                                    }                                 
+                                    });
     console.log("(6) Maximaler und minimaler Preis der Produkte der Kategorie Handmade.");
     console.group();
     console.table(result);
