@@ -134,8 +134,21 @@ const data = JSON.parse(rawdata);
 //   - Der Name ist in jedem Offer einer EAN Nummer gleich. Daher kannst du den Namen des
 //     ersten Elementes verwenden.
 {
-    const grouped = {}
-    const result = [];
+    const grouped = data.offers.filter(offer => offer.product.productCategory.name == 'Handmade')
+                               .reduce((prev, current) => {
+                                const ean = current.product.ean;
+                                if(!prev[ean]){
+                                    prev[ean] = [];
+                                }
+                                prev[ean].push(current);
+                                return prev;
+                               }, {});
+
+    const result = Object.keys(grouped).map(ean => ({
+        ean: ean,
+        name: grouped[ean][0].product.name,
+        count: grouped[ean].length
+    }));
     console.log("(7) Angebote der Kategorie Handmade.");
     console.group();
     console.table(result);
