@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+//enums
+
+enum Activity {
+  Grazing
+  Resting
+  Wandering
+}
+
+enum Condition {
+  Healthy
+  Limping
+  Tired
+  Aggressive
+  Friendly
+  Hungry
+}
+
+enum BadgeName {
+  firstPicture
+  firstSighting
+  firstHungryElk
+}
+
+//models
+
+model Sighting {
+  id          Int @id @default(autoincrement())
+  latitude    Float
+  longtitude  Float
+  reportedAt  DateTime @default(now()) 
+  user        User @relation(fields: [userId], references: [id])
+  userId      Int
+  imageURL    String?
+  notes       String?
+  activity    Activity
+  condition   Condition
+}
+
+model User{
+  id                Int @id @default(autoincrement())
+  username          String
+  email             String
+  passwordHash      String 
+  profileImageUrl   String?
+  bio               String
+  points            Int @default(0)
+  sightings         Sighting[]
+  badges            UserBadge[]
+  topics            ForumTopic[]
+  posts             Post[]
+}
+
+model UserBadge{
+  id        Int @id @default (autoincrement())
+  badgeName BadgeName
+  user      User @relation(fields: [userId], references: [id])
+  userId    Int
+  earnedAt  DateTime @default(now())
+}
+
+model ForumTopic {
+  id        Int @id @default(autoincrement())
+  title     String
+  user      User @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
+  posts     Post[]
+}
+
+model Post {
+  id          Int @id @default(autoincrement())
+  topic       ForumTopic @relation(fields: [topicId], references: [id])
+  topicId     Int
+  user User   @relation(fields: [userId], references: [id])
+  userId      Int
+  content     String
+  createdAt   DateTime
+  likesCount  Int
+}

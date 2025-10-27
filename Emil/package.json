@@ -1,0 +1,34 @@
+{
+  "name": "sj2526-5akif-wmc-emiltracker-backend-christoph98",
+  "version": "1.0.0",
+  "description": "Klasse: 5AKIF\\\r Schuljahr: 2025/26\\\r Name: Christoph Weghuber",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node dist/index.js"
+    
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Die-Spengergasse/sj2526-5akif-wmc-emiltracker-backend-Christoph98.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Die-Spengergasse/sj2526-5akif-wmc-emiltracker-backend-Christoph98/issues"
+  },
+  "homepage": "https://github.com/Die-Spengergasse/sj2526-5akif-wmc-emiltracker-backend-Christoph98#readme",
+  "dependencies": {
+    "@prisma/client": "^6.17.1",
+    "express": "^5.1.0",
+    "prisma": "^6.17.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.7.2",
+    "typescript": "^5.9.3"
+  }
+}
